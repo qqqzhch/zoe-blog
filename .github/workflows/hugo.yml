@@ -39,7 +39,7 @@ jobs:
 
       - name: Build Hugo site
         run: |
-          hugo clean  # 清理旧构建文件，避免缓存残留
+
           hugo --minify --baseURL "https://qqqzhch.github.io/zoe-blog/"  # 显式指定baseURL，确保路径正确
 
       - name: Deploy to GitHub Pages
