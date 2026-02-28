@@ -23,21 +23,15 @@ jobs:
           hugo-version: '0.157.0'
           extended: true
 
+      - name: Create config.toml
+        run: |
+          echo "baseURL = 'https://qqqzhch.github.io/zoe-blog/'" > config.toml
+          echo "languageCode = 'zh-CN'" >> config.toml
+          echo "title = 'Zoe Blog'" >> config.toml
+
       - name: Build Hugo site
         run: |
-          # 创建 config.toml（如果不存在）
-          if [ ! -f config.toml ]; then
-            cat > config.toml << 'EOF'
-baseURL = 'https://qqqzhch.github.io/zoe-blog/'
-languageCode = 'zh-CN'
-title = 'Zoe Blog'
-EOF
-          fi
-          
-          # 确保 content 目录存在
           mkdir -p content/posts
-          
-          # 运行 Hugo
           hugo --minify
 
       - name: Deploy to GitHub Pages
