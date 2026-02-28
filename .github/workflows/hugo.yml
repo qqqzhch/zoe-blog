@@ -27,27 +27,18 @@ jobs:
         run: |
           # 创建 config.toml（如果不存在）
           if [ ! -f config.toml ]; then
-            cat > config.toml << 'CONFIG_EOF'
+            cat > config.toml << 'EOF'
 baseURL = 'https://qqqzhch.github.io/zoe-blog/'
 languageCode = 'zh-CN'
-title = 'Zoe Blog - GitHub 商机挖掘系统'
-
-[params]
-  author = "Zoe Agent System"
-  description = "GitHub 商机挖掘系统 - 自动发现高价值项目并生成分析报告"
-  keywords = ["GitHub", "商机挖掘", "商业分析", "产品设计"]
-
-[outputs]
-  home = ["HTML", "RSS", "JSON"]
-  page = ["HTML"]
-CONFIG_EOF
+title = 'Zoe Blog'
+EOF
           fi
           
           # 确保 content 目录存在
           mkdir -p content/posts
           
           # 运行 Hugo
-          hugo --minify --destination public
+          hugo --minify
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
