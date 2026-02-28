@@ -28,6 +28,7 @@ jobs:
           echo "baseURL = 'https://qqqzhch.github.io/zoe-blog/'" > config.toml
           echo "languageCode = 'zh-CN'" >> config.toml
           echo "title = 'Zoe Blog'" >> config.toml
+          echo "disableKinds = ['taxonomy', 'taxonomyTerm']" >> config.toml
 
       - name: Build Hugo site
         run: |
