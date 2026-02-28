@@ -28,15 +28,17 @@ jobs:
           echo "baseURL = 'https://qqqzhch.github.io/zoe-blog/'" > config.toml
           echo "languageCode = 'zh-CN'" >> config.toml
           echo "title = 'Zoe Blog'" >> config.toml
-          echo "disableKinds = ['taxonomy', 'taxonomyTerm']" >> config.toml
+          echo "disableKinds = ['taxonomy', 'taxonomyTerm', 'RSS']" >> config.toml
+          echo "disableLiveReload = true" >> config.toml
 
       - name: Build Hugo site
         run: |
           mkdir -p content/posts
-          hugo --minify
+          hugo --minify --cleanDestinationDir
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
+          force_orphan: true
