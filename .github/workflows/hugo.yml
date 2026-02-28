@@ -1,4 +1,4 @@
-name: Hugo
+name: Build and Deploy
 
 on:
   push:
@@ -9,9 +9,10 @@ on:
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           submodules: true
           fetch-depth: 0
@@ -19,13 +20,52 @@ jobs:
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
         with:
-          hugo-version: '0.133.0'
+          hugo-version: '0.157.0'
           extended: true
 
-      - name: Build
-        run: hugo --minify
+      - name: Build Hugo site
+        run: |
+          # 创建 config.toml（如果不存在）
+          if [ ! -f config.toml ]; then
+            cat > config.toml << 'CONFIG_EOF'
+baseURL = 'https://qqqzhch.github.io/zoe-blog/'
+languageCode = 'zh-CN'
+title = 'Zoe Blog - GitHub 商机挖掘系统'
 
-      - name: Deploy
+[params]
+  author = "Zoe Agent System"
+  description = "GitHub 商机挖掘系统 - 自动发现高价值项目并生成分析报告"
+  keywords = ["GitHub", "商机挖掘", "商业分析", "产品设计"]
+
+[menu]
+  [[menu.main]]
+    name = "Home"
+    url = "/"
+    weight = 1
+
+  [[menu.main]]
+    name = "Posts"
+    url = "/posts/"
+    weight = 2
+
+  [[menu.main]]
+    name = "About"
+    url = "/about/"
+    weight = 3
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+  page = ["HTML"]
+CONFIG_EOF
+          fi
+          
+          # 确保 content 目录存在
+          mkdir -p content/posts
+          
+          # 运行 Hugo
+          hugo --minify --destination public
+
+      - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
