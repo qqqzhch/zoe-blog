@@ -37,22 +37,6 @@ title = 'Zoe Blog - GitHub 商机挖掘系统'
   description = "GitHub 商机挖掘系统 - 自动发现高价值项目并生成分析报告"
   keywords = ["GitHub", "商机挖掘", "商业分析", "产品设计"]
 
-[menu]
-  [[menu.main]]
-    name = "Home"
-    url = "/"
-    weight = 1
-
-  [[menu.main]]
-    name = "Posts"
-    url = "/posts/"
-    weight = 2
-
-  [[menu.main]]
-    name = "About"
-    url = "/about/"
-    weight = 3
-
 [outputs]
   home = ["HTML", "RSS", "JSON"]
   page = ["HTML"]
