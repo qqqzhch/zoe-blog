@@ -14,28 +14,40 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          submodules: true
-          fetch-depth: 0
+          submodules: true  # 拉取主题子模块（如果使用）
+          fetch-depth: 0    # 获取完整提交历史（Hugo 生成永久链接需要）
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
         with:
-          hugo-version: '0.157.0'
-          extended: true
+          hugo-version: '0.129.0'  # 改为有效稳定版本（推荐使用最新LTS）
+          extended: true           # 启用扩展版（支持SCSS编译）
 
-      - name: Create config.toml
+      - name: Create complete config.toml
         run: |
           echo "baseURL = 'https://qqqzhch.github.io/zoe-blog/'" > config.toml
           echo "languageCode = 'zh-CN'" >> config.toml
           echo "title = 'Zoe Blog'" >> config.toml
+          # 关键：添加输出格式配置，确保生成HTML（解决XML问题）
+          echo '[outputs]' >> config.toml
+          echo '  home = ["HTML", "RSS"]' >> config.toml
+          echo '  page = ["HTML"]' >> config.toml
+          echo '  section = ["HTML"]' >> config.toml
+          # 修复子路径部署的URL问题
+          echo "relativeURLs = true" >> config.toml
+          echo "canonifyURLs = false" >> config.toml
 
       - name: Build Hugo site
         run: |
-          mkdir -p content/posts
-          hugo --minify
-          
+          hugo clean  # 清理旧构建文件，避免缓存残留
+          hugo --minify --baseURL "https://qqqzhch.github.io/zoe-blog/"  # 显式指定baseURL，确保路径正确
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
+          publish_dir: ./public          # Hugo 构建输出目录
+          publish_branch: gh-pages      # 部署到gh-pages分支（GitHub Pages默认）
+          force_orphan: true            # 清理旧分支历史，减少体积
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
